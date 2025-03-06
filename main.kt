@@ -230,19 +230,13 @@ fun exibirTabuleiro(tabuleiro: Array<Array<Pair<String, String>>>, revelados: Se
 
 // Arthur
 fun atribuirCores(pares: List<String>): Map<String, String> {
-    // Aqui você pode adicionar a lógica para atribuir cores as cartas do tabuleiro.
-    // Retorne um Map com as cartas e suas respectivas cores.
-    // Exemplo de retorno: mapOf("A1" to "\u001B[31m", "A2" to "\u001B[34m", "B1" to "\u001B[33m", "B2" to "\u001B[30m") 
-    // A cor preta é obrigatória, as demais cores podem ser escolhidas aleatoriamente.
-    // Utilize a lista cores para escolher as cores.
-    // Exemplo de uso: cores[0] para pegar a cor vermelha.
-    // Exemplo de uso: cores[1] para pegar a cor azul.
-    // Exemplo de uso: cores[2] para pegar a cor amarela.
-    // Exemplo de uso: cores[3] para pegar a cor preta.
-    // Utilize a função shuffled() para embaralhar a lista de pares.
-    // Exemplo de uso: cores.shuffled() para embaralhar a lista de cores.
+    val coresDisponiveis = cores.filter { it != cores[3] }.shuffled() 
     val coresMap = mutableMapOf<String, String>()
     
+    pares.forEachIndexed { index, par ->
+        val cor = if (index == 0) cores[3] else coresDisponiveis[index % coresDisponiveis.size]
+        coresMap[par] = cor
+    }
     
     return coresMap
 }
