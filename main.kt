@@ -22,17 +22,15 @@ fun main() {
     config()
     while(opcao != 4) {
     
-        println(""" 
-            ==============================================
-                    MANGA ROSA MEMORY GAME
-            ==============================================
-            1. INICIAR
-            2. PONTUAÇÃO PARTICIPANTES
-            3. REGRAS DO JOGO
-            4. SAIR
-            ==============================================
-            INFORME SUA OPÇÃO:
-        """)
+            println("==============================================")
+            println("     MANGA ROSA MEMORY GAME")
+            println("==============================================")
+            println("1. INICIAR")
+            println("2. PONTUAÇÃO PARTICIPANTES")
+            println("3. REGRAS DO JOGO")
+            println("4. SAIR")
+            println("==============================================")
+            print("INFORME SUA OPÇÃO: ")
 
         val opcaoMenu = readln().toInt()
         when (opcaoMenu) {
