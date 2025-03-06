@@ -4,6 +4,8 @@ import kotlin.random.Random
 val jogadores = mutableMapOf<String, Map<String, Any>>()
 var nomeJogador1: String = "PARTICIPANTE01"
 var nomeJogador2: String = "PARTICIPANTE02"
+var corJogador1: String = ""
+var corJogador2: String = ""
 val cores = listOf(
     "\u001B[31m", // Vermelho
     "\u001B[34m", // Azul
@@ -116,22 +118,90 @@ fun iniciarJogo() {
 
 // Arthur
 fun capturarTamanhoTabuleiro(): Pair<Int, Int> {
-    // Aqui você pode adicionar a lógica para capturar o tamanho do tabuleiro que o jogador deseja jogar.   
-    // Retorne em Pair a quantidade de linhas e colunas do tabuleiro.
-    // Se n souber, pesquise sobre Pair em Kotlin.
-    // Exemplo de retorno: Pair(4, 4)
-    return Pair(4, 4)
+    while (true) { // Loop infinito até que um valor válido seja inserido
+        println("Qual o tamanho de tabuleiro que deseja jogar?")
+        println("a: 4x4")
+        println("b: 6x6")
+        println("c: 8x8")  
+        println("d: 10x10")
+        print("Digite a opção: ")
+
+        val size = readln().trim().lowercase()
+
+        when (size) {
+            "a" -> return Pair(4, 4)
+            "b" -> return Pair(6, 6)
+            "c" -> return Pair(8, 8)
+            "d" -> return Pair(10, 10)
+            else -> println("Opção inválida! Tente novamente.\n")
+        }
+    }
 }
 
 // Arthur
 fun config() {
-    // Aqui vc pode adicionar a lógica de configuração do jogo, como escolha de cores, nomes dos jogadores, etc.
+    println("Qual o apelido do(a) participante 1? ")
+    print("Digite o apelido: ")
+    nomeJogador1 = readlnOrNull()?.takeIf { it.isNotBlank() } ?: "PARTICIPANTE01"
 
+    while (true) {
+        println("Atribua uma cor para ${nomeJogador1}")
+        println("a: Vermelho")
+        println("b: Azul")
+        print("Digite a opção: ")
 
-     /*  Assim q salva as configurações dos jogadores no Map
-     jogadores[nomeJogador1.ifBlank { "PARTICIPANTE01" }] = mapOf("cor" to cor1, "pontuacao" to 0)
-     jogadores[nomeJogador2.ifBlank { "PARTICIPANTE02" }] = mapOf("cor" to cor2, "pontuacao" to 0)*/
+        corJogador1 = readlnOrNull()?.trim()?.lowercase() ?: "a"
 
+        when (corJogador1) {
+            "a" -> {
+                corJogador1 = "vermelho"
+                break
+            }
+            "b" -> {
+                corJogador1 = "azul"
+                break
+            }
+            else -> println("Opção inválida! Tente novamente.\n")
+        }
+    }
+    println("Cor atribuída ao ${nomeJogador1}: ${corJogador1}")
+
+    println("Qual o apelido do(a) participante 2? ")
+    print("Digite o apelido: ")
+    nomeJogador2 = readlnOrNull()?.takeIf { it.isNotBlank() } ?: "PARTICIPANTE02"
+
+    while (true) {
+        println("Atribua uma cor para ${nomeJogador2}")
+
+        if (corJogador1 == "vermelho") {
+            println("b: Azul")
+        } else {
+            println("a: Vermelho")
+        }
+
+        print("Digite a opção: ")
+        val inputCorJogador2 = readlnOrNull()?.trim()?.lowercase()
+
+        when (inputCorJogador2) {
+            "a" -> {
+                if (corJogador1 != "vermelho") {
+                    corJogador2 = "vermelho"
+                    break
+                }
+            }
+            "b" -> {
+                if (corJogador1 != "azul") {
+                    corJogador2 = "azul"
+                    break
+                }
+            }
+            else -> println("Opção inválida! Tente novamente.\n")
+        }
+    }
+    println("Cor atribuída ao ${nomeJogador2}: ${corJogador2}")
+
+    jogadores[nomeJogador1] = mapOf("cor" to corJogador1, "pontuacao" to 0)
+    jogadores[nomeJogador2] = mapOf("cor" to corJogador2, "pontuacao" to 0)
 }
 
 // Laysa
@@ -227,19 +297,14 @@ fun exibirTabuleiro(tabuleiro: Array<Array<Pair<String, String>>>, revelados: Se
 
 // Arthur
 fun atribuirCores(pares: List<String>): Map<String, String> {
-    // Aqui você pode adicionar a lógica para atribuir cores as cartas do tabuleiro.
-    // Retorne um Map com as cartas e suas respectivas cores.
-    // Exemplo de retorno: mapOf("A1" to "\u001B[31m", "A2" to "\u001B[34m", "B1" to "\u001B[33m", "B2" to "\u001B[30m") 
-    // A cor preta é obrigatória, as demais cores podem ser escolhidas aleatoriamente.
-    // Utilize a lista cores para escolher as cores.
-    // Exemplo de uso: cores[0] para pegar a cor vermelha.
-    // Exemplo de uso: cores[1] para pegar a cor azul.
-    // Exemplo de uso: cores[2] para pegar a cor amarela.
-    // Exemplo de uso: cores[3] para pegar a cor preta.
-    // Utilize a função shuffled() para embaralhar a lista de pares.
-    // Exemplo de uso: cores.shuffled() para embaralhar a lista de cores.
+    val coresDisponiveis = cores.filter { it != cores[3] }.shuffled()
     val coresMap = mutableMapOf<String, String>()
+    val indicePreto = (pares.indices).random()
     
+    pares.forEachIndexed { index, par ->
+        val cor = if (index == indicePreto) cores[3] else coresDisponiveis[index % coresDisponiveis.size]
+        coresMap[par] = cor
+    }
     
     return coresMap
 }
