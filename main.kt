@@ -212,8 +212,11 @@ fun config() {
 
 // Laysa
 fun exibirPontuacao() {
-    // Aqui você pode adicionar a lógica para exibir a pontuação dos jogadores.
-    // Utilize o map jogadores para acessar os dados dos jogadores.
+    jogadores.forEach { (nome, info) ->
+        val cor = info["cor"] as String
+        val pontuacao = info["pontuacao"] as Int
+        println("$nome - Cor: $cor - Pontuação: $pontuacao")
+    }
 }
 
 // Matheus
