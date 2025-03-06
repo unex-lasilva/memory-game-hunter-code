@@ -102,13 +102,68 @@ fun capturarTamanhoTabuleiro(): Pair<Int, Int> {
 
 // Arthur
 fun config() {
-    // Aqui vc pode adicionar a lógica de configuração do jogo, como escolha de cores, nomes dos jogadores, etc.
+    println("Qual o apelido do(a) participante 1? ")
+    print("Digite o apelido: ")
+    nomeJogador1 = readlnOrNull()?.takeIf { it.isNotBlank() } ?: "PARTICIPANTE01"
 
+    while (true) {
+        println("Atribua uma cor para ${nomeJogador1}")
+        println("a: Vermelho")
+        println("b: Azul")
+        print("Digite a opção: ")
 
-     /*  Assim q salva as configurações dos jogadores no Map
-     jogadores[nomeJogador1.ifBlank { "PARTICIPANTE01" }] = mapOf("cor" to cor1, "pontuacao" to 0)
-     jogadores[nomeJogador2.ifBlank { "PARTICIPANTE02" }] = mapOf("cor" to cor2, "pontuacao" to 0)*/
+        corJogador1 = readlnOrNull()?.trim()?.lowercase() ?: "a"
 
+        when (corJogador1) {
+            "a" -> {
+                corJogador1 = "vermelho"
+                break
+            }
+            "b" -> {
+                corJogador1 = "azul"
+                break
+            }
+            else -> println("Opção inválida! Tente novamente.\n")
+        }
+    }
+    println("Cor atribuída ao ${nomeJogador1}: ${corJogador1}")
+
+    println("Qual o apelido do(a) participante 2? ")
+    print("Digite o apelido: ")
+    nomeJogador2 = readlnOrNull()?.takeIf { it.isNotBlank() } ?: "PARTICIPANTE02"
+
+    while (true) {
+        println("Atribua uma cor para ${nomeJogador2}")
+
+        if (corJogador1 == "vermelho") {
+            println("b: Azul")
+        } else {
+            println("a: Vermelho")
+        }
+
+        print("Digite a opção: ")
+        val inputCorJogador2 = readlnOrNull()?.trim()?.lowercase()
+
+        when (inputCorJogador2) {
+            "a" -> {
+                if (corJogador1 != "vermelho") {
+                    corJogador2 = "vermelho"
+                    break
+                }
+            }
+            "b" -> {
+                if (corJogador1 != "azul") {
+                    corJogador2 = "azul"
+                    break
+                }
+            }
+            else -> println("Opção inválida! Tente novamente.\n")
+        }
+    }
+    println("Cor atribuída ao ${nomeJogador2}: ${corJogador2}")
+
+    jogadores[nomeJogador1] = mapOf("cor" to corJogador1, "pontuacao" to 0)
+    jogadores[nomeJogador2] = mapOf("cor" to corJogador2, "pontuacao" to 0)
 }
 
 // Laysa
