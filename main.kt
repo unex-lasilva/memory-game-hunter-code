@@ -17,56 +17,62 @@ val reset = "\u001B[0m"
 
 // Matheus
 fun main() {
-    println(""" 
-        ==============================================
-                   MANGA ROSA MEMORY GAME
-        ==============================================
-          1. INICIAR
-          2. PONTUAÇÃO PARTICIPANTES
-          3. REGRAS DO JOGO
-          4. SAIR
-        ==============================================
-          INFORME SUA OPÇÃO:
-    """)
+    val opcao: Int = 0
+   
+    config()
+    while(opcao != 4) {
+    
+        println(""" 
+            ==============================================
+                    MANGA ROSA MEMORY GAME
+            ==============================================
+            1. INICIAR
+            2. PONTUAÇÃO PARTICIPANTES
+            3. REGRAS DO JOGO
+            4. SAIR
+            ==============================================
+            INFORME SUA OPÇÃO:
+        """)
 
-    val opcaoMenu = readln().toInt()
-    when (opcaoMenu) {
-        1 -> {
-            println("\n=======================================")
-            println("       INICIANDO O JOGO...       ")
-            println("\n=======================================")
-            
-            iniciarJogo()
+        val opcaoMenu = readln().toInt()
+        when (opcaoMenu) {
+            1 -> {
+                println("\n=======================================")
+                println("       INICIANDO O JOGO...       ")
+                println("\n=======================================")
+                
+                iniciarJogo()
+            }
+            2 -> {
+                println("\n=======================================")
+                println("       PONTUAÇÃO DOS PARTICIPANTES...      ")
+                println("\n=======================================")
+
+                exibirPontuacao()
         }
-        2 -> {
-            println("\n=======================================")
-            println("       PONTUAÇÃO DOS PARTICIPANTES...      ")
-            println("\n=======================================")
+        3 -> {
+                println("\n==============================")
+                println("       REGRAS DO JOGO...      ")
+                println("\n==============================")
 
-            exibirPontuacao()
-       }
-       3 -> {
-            println("\n==============================")
-            println("       REGRAS DO JOGO...      ")
-            println("\n==============================")
+                exibirRegras()
+        }
+        4 -> {
+                println("\n=======================================")
+                println("       SAINDO DO JOGO... ATÉ LOGO      ")
+                println("\n=======================================")
+                break
+        }
+        else -> {
+            println("\n==========================================")
+            println("       OPÇÃO INVÁLIDA! TENTE NOVAMENTE      ")
+            println("\n==========================================")
+        }
 
-            exibirRegras()
-       }
-       4 -> {
-            println("\n=======================================")
-            println("       SAINDO DO JOGO... ATÉ LOGO      ")
-            println("\n=======================================")
-            break
-       }
-       else -> {
-        println("\n==========================================")
-        println("       OPÇÃO INVÁLIDA! TENTE NOVAMENTE      ")
-        println("\n==========================================")
-       }
-
+        }
+    
     }
- 
-}
+    }
 
 // Henrique
 fun iniciarJogo() {
