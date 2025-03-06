@@ -4,6 +4,8 @@ import kotlin.random.Random
 val jogadores = mutableMapOf<String, Map<String, Any>>()
 var nomeJogador1: String = "PARTICIPANTE01"
 var nomeJogador2: String = "PARTICIPANTE02"
+var corJogador1: String = ""
+var corJogador2: String = ""
 val cores = listOf(
     "\u001B[31m", // Vermelho
     "\u001B[34m", // Azul
@@ -15,6 +17,7 @@ val reset = "\u001B[0m"
 
 // Matheus
 fun main() {
+    config()
     // Nessa função você pode adicionar a lógica de menu principal do jogo, como iniciar o jogo, exibir pontuações, regras, e as demais opções, chamando seus respectivos metodos.
     // Lembre-se de chamar a função config() para configurar o jogo antes de iniciar o menu principal.
     // Exemplo de menu:
