@@ -15,19 +15,55 @@ val reset = "\u001B[0m"
 
 // Matheus
 fun main() {
-    // Nessa função você pode adicionar a lógica de menu principal do jogo, como iniciar o jogo, exibir pontuações, regras, e as demais opções, chamando seus respectivos metodos.
-    // Lembre-se de chamar a função config() para configurar o jogo antes de iniciar o menu principal.
-    // Exemplo de menu:
-    /*==============================================
-               MANGA ROSA MEMORY GAME
-      ==============================================
-      1. INICIAR
-      2. PONTUAÇÃO PARTICIPANTES
-      3. REGRAS DO JOGO
-      4. SAIR
-      ==============================================
-      INFORME SUA OPÇÃO: 
-    */
+    println(""" 
+        ==============================================
+                   MANGA ROSA MEMORY GAME
+        ==============================================
+          1. INICIAR
+          2. PONTUAÇÃO PARTICIPANTES
+          3. REGRAS DO JOGO
+          4. SAIR
+        ==============================================
+          INFORME SUA OPÇÃO:
+    """)
+
+    val opcaoMenu = readln().toint()
+    when (opcaoMenu) {
+        1 -> {
+            println("\n=======================================")
+            println("       INICIANDO O JOGO...       ")
+            println("\n=======================================")
+            
+            iniciarJogo()
+        }
+        2 -> {
+            println("\n=======================================")
+            println("       PONTUAÇÃO DOS PARTICIPANTES...      ")
+            println("\n=======================================")
+
+            exibirPontuacao()
+       }
+       3 -> {
+            println("\n==============================")
+            println("       REGRAS DO JOGO...      ")
+            println("\n==============================")
+
+            exibirRegras()
+       }
+       4 -> {
+            println("\n=======================================")
+            println("       SAINDO DO JOGO... ATÉ LOGO      ")
+            println("\n=======================================")
+            break
+       }
+       else -> {
+        println("\n==========================================")
+        println("       OPÇÃO INVÁLIDA! TENTE NOVAMENTE      ")
+        println("\n==========================================")
+       }
+
+    }
+ 
 }
 
 // Henrique
@@ -106,7 +142,36 @@ fun exibirPontuacao() {
 
 // Matheus
 fun exibirRegras() {
-    // Aqui você vai dar um print nas regras do jogo. lembando que são 17 regras.
+    println("""
+    1. No início do jogo, o participante deve escolher o tamanho do tabuleiro:
+    Opções: 4x4, 6x6, 8x8 ou 10x10.
+    2. Todos os pares de figuras possuem uma cor de fundo: vermelho, azul, amarelo ou preto.
+    3. Em todo jogo deve existir uma figura de fundo preto.
+    4. Em todo jogo, metade das figuras devem ter fundo azul e vermelho.
+    5. As demais figuras que sobram no jogo devem ter fundo amarelo.
+    6. Cada participante deve ter atribuído a si uma cor (vermelho ou azul) no início do jogo.
+    7. Todo participante deve ter um nome registrado. Caso não tenha, o nome padrão será atribuído:
+    'PARTICIPANTE01' e 'PARTICIPANTE02'.
+    8. Cada participante possui uma pontuação atrelada a si.
+    9. Se o participante encontrar um par de cartas com fundo amarelo, ele(a) fatura 1 ponto.
+    10. Se o participante encontrar um par de cartas com o fundo da sua cor, ele(a) fatura 5 pontos.
+    11. Se o participante encontrar um par de cartas com o fundo da cor de seu adversário e errar, perde 2 pontos.
+    Porém, se acertar, ganha apenas 1 ponto.
+    12. O participante não pode ter pontuação negativa. Se perder mais pontos do que possui, ficará com a pontuação zerada.
+    13. Se o participante encontrar uma carta com fundo preto e errar o seu par, perde o jogo, mesmo que tenha a pontuação superior à do adversário.
+    Mas se acertar, ganha o jogo.
+    ===========================================================================================================
+    REGRAS DE INTERAÇÃO DURANTE O JOGO:
+    14. Se o participante informar uma opção de tamanho de tabuleiro inválida, será exibida a seguinte mensagem:
+    'Por favor, escolha uma das opções de tamanho de tabuleiro disponíveis'.
+    15. O participante deve informar a linha e a coluna da carta que deseja virar.
+    16. Caso os valores de linha e coluna sejam inválidos, será exibida a seguinte mensagem:
+    'Posição da carta inválida, por favor, insira uma posição válida'.
+    O participante terá 3 tentativas para corrigir a posição, caso erre 3 vezes, perde a vez.
+    17. Se o participante escolher uma carta já virada, será exibida a mensagem:
+    'A carta da posição informada já está virada, por favor, escolha outra posição'.
+    O participante terá 3 tentativas para corrigir, caso erre 3 vezes, perde a vez.
+    ===========================================================================================================""")
 }
 
 // Laysa
