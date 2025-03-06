@@ -29,7 +29,7 @@ fun main() {
           INFORME SUA OPÇÃO:
     """)
 
-    val opcaoMenu = readln().toint()
+    val opcaoMenu = readln().toInt()
     when (opcaoMenu) {
         1 -> {
             println("\n=======================================")
