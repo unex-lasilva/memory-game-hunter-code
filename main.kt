@@ -80,11 +80,24 @@ fun iniciarJogo() {
 
 // Arthur
 fun capturarTamanhoTabuleiro(): Pair<Int, Int> {
-    // Aqui você pode adicionar a lógica para capturar o tamanho do tabuleiro que o jogador deseja jogar.   
-    // Retorne em Pair a quantidade de linhas e colunas do tabuleiro.
-    // Se n souber, pesquise sobre Pair em Kotlin.
-    // Exemplo de retorno: Pair(4, 4)
-    return Pair(4, 4)
+    while (true) { // Loop infinito até que um valor válido seja inserido
+        println("Qual o tamanho de tabuleiro que deseja jogar?")
+        println("a: 4x4")
+        println("b: 6x6")
+        println("c: 8x8")  
+        println("d: 10x10")
+        print("Digite a opção: ")
+
+        val size = readln().trim().lowercase()
+
+        when (size) {
+            "a" -> return Pair(4, 4)
+            "b" -> return Pair(6, 6)
+            "c" -> return Pair(8, 8)
+            "d" -> return Pair(10, 10)
+            else -> println("Opção inválida! Tente novamente.\n")
+        }
+    }
 }
 
 // Arthur
