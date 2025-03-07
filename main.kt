@@ -213,7 +213,7 @@ fun exibirPontuacao() {
     jogadores.forEach { (nome, info) ->
         val cor = info["cor"] as String
         val pontuacao = info["pontuacao"] as Int
-        println("$nome - Cor: $cor - Pontuação: $pontuacao")
+        println("$nome - Cor: $cor - Pontuação: $pontuacao$reset")
     }
 }
 
