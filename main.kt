@@ -1,7 +1,7 @@
 import kotlin.io.readln;
 import kotlin.random.Random
 
-val jogadores = mutableMapOf<String, Map<String, Any>>()
+val jogadores = mutableMapOf<String, MutableMap<String, Any>>()
 var nomeJogador1: String = "PARTICIPANTE01"
 var nomeJogador2: String = "PARTICIPANTE02"
 var corJogador1: String = ""
@@ -73,6 +73,53 @@ fun main() {
     }
 
 // Henrique
+// fun iniciarJogo() {
+//     val (linhas, colunas) = capturarTamanhoTabuleiro()
+//     val tabuleiro = criarTabuleiro(linhas, colunas)
+//     val revelados = mutableSetOf<Pair<Int, Int>>()
+//     val paresEncontrados = mutableSetOf<String>()
+//     var ultimaEscolha: Pair<Int, Int>? = null
+
+//     while (paresEncontrados.size < (linhas * colunas) / 2) {
+//         exibirPontuacao();
+//         exibirTabuleiro(tabuleiro, revelados)
+//         print("Escolha uma linha: ")
+//         var linha = readln().toInt()
+//         linha -= 1
+//         print("Escolha uma coluna: ")
+//         var coluna = readln().toInt()
+//         coluna -= 1
+    
+//         if (linha in 0 until linhas && coluna in 0 until colunas) {
+//             revelados.add(linha to coluna)
+//             exibirTabuleiro(tabuleiro, revelados)
+    
+//             if (ultimaEscolha == null) {
+//                 ultimaEscolha = linha to coluna
+//             } else {
+//                 val (linhaAnterior, colunaAnterior) = ultimaEscolha
+//                 val valorAnterior = tabuleiro[linhaAnterior][colunaAnterior].second
+//                 val valorAtual = tabuleiro[linha][coluna].second
+    
+//                 if (valorAtual == valorAnterior) {
+//                     paresEncontrados.add(valorAtual)
+//                 } else {
+//                     println("Pares errados!")
+//                     println("==============================================")
+//                     Thread.sleep(2000) // Aguarda 2 segundos antes de resetar
+//                     revelados.remove(ultimaEscolha)
+//                     revelados.remove(linha to coluna)
+                    
+//                 }
+//                 ultimaEscolha = null
+//             }
+//         } else {
+//             println("Posição inválida!")
+//         }
+//     }
+//     println("Parabéns! Você encontrou todos os pares!")
+// }
+
 fun iniciarJogo() {
     val (linhas, colunas) = capturarTamanhoTabuleiro()
     val tabuleiro = criarTabuleiro(linhas, colunas)
@@ -80,38 +127,75 @@ fun iniciarJogo() {
     val paresEncontrados = mutableSetOf<String>()
     var ultimaEscolha: Pair<Int, Int>? = null
 
+    var jogadorAtual = nomeJogador1
+
     while (paresEncontrados.size < (linhas * colunas) / 2) {
-        exibirPontuacao();
+        exibirPontuacao()
         exibirTabuleiro(tabuleiro, revelados)
-        print("Escolha uma linha: ")
-        var linha = readln().toInt()
-        linha -= 1
-        print("Escolha uma coluna: ")
-        var coluna = readln().toInt()
-        coluna -= 1
-    
+
+        println("$jogadorAtual , escolha uma linha: ")
+        var linha = readln().toInt() - 1
+        println("$jogadorAtual , escolha uma coluna: ")
+        var coluna = readln().toInt() - 1
+
         if (linha in 0 until linhas && coluna in 0 until colunas) {
             revelados.add(linha to coluna)
             exibirTabuleiro(tabuleiro, revelados)
-    
+
             if (ultimaEscolha == null) {
                 ultimaEscolha = linha to coluna
             } else {
                 val (linhaAnterior, colunaAnterior) = ultimaEscolha
-                val valorAnterior = tabuleiro[linhaAnterior][colunaAnterior].second
-                val valorAtual = tabuleiro[linha][coluna].second
-    
+                val (corAnterior, valorAnterior) = tabuleiro[linhaAnterior][colunaAnterior]
+                val (corAtual, valorAtual) = tabuleiro[linha][coluna]
+
+                
+                
+                
+
                 if (valorAtual == valorAnterior) {
                     paresEncontrados.add(valorAtual)
+                    println("Par encontrado!")
+
+                    val corJogador = jogadores[jogadorAtual]?.get("cor") as String
+                val adversario = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
+                val corAdversario = jogadores[adversario]?.get("cor") as String
+                
+                    // Pontuação conforme regras
+                    when {
+                        corAtual == cores[3] -> { // Fundo preto
+                            atualizarPontuacao(jogadorAtual, 50)
+                        }
+                        corAtual == cores[2] -> { // Fundo amarelo
+                            atualizarPontuacao(jogadorAtual, 1)
+                        }
+                        corAtual == corJogador -> { // Fundo da própria cor
+                            atualizarPontuacao(jogadorAtual, 5)
+                        }
+                        corAtual == corAdversario -> { // Fundo do adversário
+                            atualizarPontuacao(jogadorAtual, 1)
+                        }
+                    }
                 } else {
                     println("Pares errados!")
-                    println("==============================================")
-                    Thread.sleep(2000) // Aguarda 2 segundos antes de resetar
+                    val corJogador = jogadores[jogadorAtual]?.get("cor") as String
+                    val adversario = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
+                    val corAdversario = jogadores[adversario]?.get("cor") as String
+                    
+                    if (corAtual == cores[3] || corAnterior == cores[3]) { // Se errou par preto
+                        atualizarPontuacao(jogadorAtual, -50)
+                    }
+
+                    if (corAtual == corAdversario || corAnterior == corAdversario) { // Se errou par do adversário
+                        atualizarPontuacao(jogadorAtual, -2)
+                    }
+
+                    Thread.sleep(2000)
                     revelados.remove(ultimaEscolha)
                     revelados.remove(linha to coluna)
-                    
                 }
                 ultimaEscolha = null
+                jogadorAtual = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
             }
         } else {
             println("Posição inválida!")
@@ -204,8 +288,8 @@ fun config() {
     }
     println("Cor atribuída ao ${nomeJogador2}: ${corJogador2}")
 
-    jogadores[nomeJogador1] = mapOf("cor" to corJogador1, "pontuacao" to 0)
-    jogadores[nomeJogador2] = mapOf("cor" to corJogador2, "pontuacao" to 0)
+    jogadores[nomeJogador1] = mutableMapOf("cor" to corJogador1, "pontuacao" to 0)
+    jogadores[nomeJogador2] = mutableMapOf("cor" to corJogador2, "pontuacao" to 0)
 }
 
 // Laysa
@@ -213,7 +297,7 @@ fun exibirPontuacao() {
     jogadores.forEach { (nome, info) ->
         val cor = info["cor"] as String
         val pontuacao = info["pontuacao"] as Int
-        println("$nome - Cor: $cor - Pontuação: $pontuacao")
+        println("$nome - Cor: $cor - Pontuação: $pontuacao $reset")
     }
 }
 
@@ -252,9 +336,17 @@ fun exibirRegras() {
 }
 
 // Laysa
+// fun atualizarPontuacao(jogador: String, pontos: Int) {
+//     val pontuacaoAtual = jogadores[jogador]?.get("pontuacao") as Int
+//     val novaPontuacao = maxOf(0, pontuacaoAtual + pontos)
+//     jogadores[jogador]?.set("pontuacao", novaPontuacao)
+//     // println("$jogador ganhou $pontos pontos! Pontuação atual: $novaPontuacao")
+// }
+
 fun atualizarPontuacao(jogador: String, pontos: Int) {
-    // Aqui você pode adicionar a lógica para atualizar a pontuação do jogador.
-    // Utilize o map jogadores para acessar os dados dos jogadores e atualiza-los.
+    val pontuacaoAtual = jogadores[jogador]?.get("pontuacao") as Int
+    val novaPontuacao = maxOf(0, pontuacaoAtual + pontos) // Evita pontuação negativa
+    jogadores[jogador]?.set("pontuacao", novaPontuacao) // Agora funciona!
 }
 
 // Henrique
