@@ -17,127 +17,62 @@ val reset = "\u001B[0m"
 
 // Matheus
 fun main() {
-    val opcao: Int = 0
-   
+    var opcao: Int = 0
     config()
-    while(opcao != 4) {
-    
-            println("==============================================")
-            println("     MANGA ROSA MEMORY GAME")
-            println("==============================================")
-            println("1. INICIAR")
-            println("2. PONTUAÇÃO PARTICIPANTES")
-            println("3. REGRAS DO JOGO")
-            println("4. SAIR")
-            println("==============================================")
-            print("INFORME SUA OPÇÃO: ")
+    while (opcao != 4) {
+       
+        println("==============================================")
+        println(" MANGA ROSA MEMORY GAME")
+        println("==============================================")
+        println("1. INICIAR")
+        println("2. PONTUAÇÃO PARTICIPANTES")
+        println("3. REGRAS DO JOGO")
+        println("4. SAIR")
+        println("==============================================")
+        print("INFORME SUA OPÇÃO: ")
 
+    try {
         val opcaoMenu = readln().toInt()
         when (opcaoMenu) {
-            1 -> {
-                println("\n=======================================")
-                println("       INICIANDO O JOGO...       ")
-                println("\n=======================================")
-                
-                iniciarJogo()
-            }
-            2 -> {
-                println("\n=======================================")
-                println("       PONTUAÇÃO DOS PARTICIPANTES...      ")
-                println("\n=======================================")
-
-                exibirPontuacao()
+    
+        1 -> {
+            println("\n=======================================")
+            println(" INICIANDO O JOGO... ")
+            println("\n=======================================")                    
+            
+            iniciarJogo()
+        }
+        2 -> {
+            println("\n=======================================")
+            println(" PONTUAÇÃO DOS PARTICIPANTES... ")
+            println("\n=======================================")
+      
+            exibirPontuacao()
         }
         3 -> {
-                println("\n==============================")
-                println("       REGRAS DO JOGO...      ")
-                println("\n==============================")
+            println("\n==============================")
+            println(" REGRAS DO JOGO... ")
+            println("\n==============================")
 
-                exibirRegras()
+            exibirRegras()
         }
         4 -> {
-                println("\n=======================================")
-                println("       SAINDO DO JOGO... ATÉ LOGO      ")
-                println("\n=======================================")
-                break
+            println("\n=======================================")
+            println(" SAINDO DO JOGO... ATÉ LOGO ")
+            println("\n=======================================")
+     
+             break
         }
         else -> {
+             println("\n==========================================")
+             println(" OPÇÃO INVÁLIDA! TENTE NOVAMENTE ")
+             println("\n==========================================")
+        }
+    }
+}       catch (e: NumberFormatException) {
             println("\n==========================================")
-            println("       OPÇÃO INVÁLIDA! TENTE NOVAMENTE      ")
+            println(" ENTRADA INVÁLIDA! POR FAVOR, DIGITE UM NÚMERO. ")
             println("\n==========================================")
-        }
-
-        }
-    
-    }
-    }
-
-// Henrique
-fun iniciarJogo() {
-    val (linhas, colunas) = capturarTamanhoTabuleiro()
-    val tabuleiro = criarTabuleiro(linhas, colunas)
-    val revelados = mutableSetOf<Pair<Int, Int>>()
-    val paresEncontrados = mutableSetOf<String>()
-    var ultimaEscolha: Pair<Int, Int>? = null
-
-    while (paresEncontrados.size < (linhas * colunas) / 2) {
-        exibirPontuacao();
-        exibirTabuleiro(tabuleiro, revelados)
-        print("Escolha uma linha: ")
-        var linha = readln().toInt()
-        linha -= 1
-        print("Escolha uma coluna: ")
-        var coluna = readln().toInt()
-        coluna -= 1
-    
-        if (linha in 0 until linhas && coluna in 0 until colunas) {
-            revelados.add(linha to coluna)
-            exibirTabuleiro(tabuleiro, revelados)
-    
-            if (ultimaEscolha == null) {
-                ultimaEscolha = linha to coluna
-            } else {
-                val (linhaAnterior, colunaAnterior) = ultimaEscolha
-                val valorAnterior = tabuleiro[linhaAnterior][colunaAnterior].second
-                val valorAtual = tabuleiro[linha][coluna].second
-    
-                if (valorAtual == valorAnterior) {
-                    paresEncontrados.add(valorAtual)
-                } else {
-                    println("Pares errados!")
-                    println("==============================================")
-                    Thread.sleep(2000) // Aguarda 2 segundos antes de resetar
-                    revelados.remove(ultimaEscolha)
-                    revelados.remove(linha to coluna)
-                    
-                }
-                ultimaEscolha = null
-            }
-        } else {
-            println("Posição inválida!")
-        }
-    }
-    println("Parabéns! Você encontrou todos os pares!")
-}
-
-// Arthur
-fun capturarTamanhoTabuleiro(): Pair<Int, Int> {
-    while (true) { // Loop infinito até que um valor válido seja inserido
-        println("Qual o tamanho de tabuleiro que deseja jogar?")
-        println("a: 4x4")
-        println("b: 6x6")
-        println("c: 8x8")  
-        println("d: 10x10")
-        print("Digite a opção: ")
-
-        val size = readln().trim().lowercase()
-
-        when (size) {
-            "a" -> return Pair(4, 4)
-            "b" -> return Pair(6, 6)
-            "c" -> return Pair(8, 8)
-            "d" -> return Pair(10, 10)
-            else -> println("Opção inválida! Tente novamente.\n")
         }
     }
 }
