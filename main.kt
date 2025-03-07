@@ -1,7 +1,8 @@
 import kotlin.io.readln;
+import kotlin.io.print
 import kotlin.random.Random
 
-val jogadores = mutableMapOf<String, Map<String, Any>>()
+val jogadores = mutableMapOf<String, MutableMap<String, Any>>()
 var nomeJogador1: String = "PARTICIPANTE01"
 var nomeJogador2: String = "PARTICIPANTE02"
 var corJogador1: String = ""
@@ -12,6 +13,17 @@ val cores = listOf(
     "\u001B[33m", // Amarelo
     "\u001B[30m"  // Preto
 )
+val coresMap = mapOf(
+    "\u001B[31m" to "vermelho",
+    "\u001B[32m" to "verde",
+    "\u001B[33m" to "amarelo",
+    "\u001B[34m" to "azul",
+    "\u001B[35m" to "roxo",
+    "\u001B[36m" to "ciano",
+    "\u001B[37m" to "branco",
+    "\u001B[30m" to "preto"
+)
+
 
 val reset = "\u001B[0m"
 
@@ -139,8 +151,8 @@ fun config() {
     }
     println("Cor atribuída ao ${nomeJogador2}: ${corJogador2}")
 
-    jogadores[nomeJogador1] = mapOf("cor" to corJogador1, "pontuacao" to 0)
-    jogadores[nomeJogador2] = mapOf("cor" to corJogador2, "pontuacao" to 0)
+    jogadores[nomeJogador1] = mutableMapOf("cor" to corJogador1, "pontuacao" to 0)
+    jogadores[nomeJogador2] = mutableMapOf("cor" to corJogador2, "pontuacao" to 0)
 }
 
 // Laysa
@@ -148,7 +160,7 @@ fun exibirPontuacao() {
     jogadores.forEach { (nome, info) ->
         val cor = info["cor"] as String
         val pontuacao = info["pontuacao"] as Int
-        println("$nome - Cor: $cor - Pontuação: $pontuacao")
+        println("$nome - Cor: $cor - Pontuação: $pontuacao $reset")
     }
 }
 
@@ -170,8 +182,8 @@ fun exibirRegras() {
     11. Se o participante encontrar um par de cartas com o fundo da cor de seu adversário e errar, perde 2 pontos.
     Porém, se acertar, ganha apenas 1 ponto.
     12. O participante não pode ter pontuação negativa. Se perder mais pontos do que possui, ficará com a pontuação zerada.
-    13. Se o participante encontrar uma carta com fundo preto e errar o seu par, perde o jogo, mesmo que tenha a pontuação superior à do adversário.
-    Mas se acertar, ganha o jogo.
+    13. Se o participante encontrar uma carta com fundo preto e errar o seu par, perde 50 pontos, mesmo que tenha a pontuação superior à do adversário.
+    Mas se acertar, ganha 50 pontos.
     ===========================================================================================================
     REGRAS DE INTERAÇÃO DURANTE O JOGO:
     14. Se o participante informar uma opção de tamanho de tabuleiro inválida, será exibida a seguinte mensagem:
@@ -188,9 +200,10 @@ fun exibirRegras() {
 
 // Laysa
 fun atualizarPontuacao(jogador: String, pontos: Int) {
-    // Aqui você pode adicionar a lógica para atualizar a pontuação do jogador.
-    // Utilize o map jogadores para acessar os dados dos jogadores e atualiza-los.
 }
+
+
+
 
 // Henrique
 fun criarTabuleiro(linhas: Int, colunas: Int): Array<Array<Pair<String, String>>> {
