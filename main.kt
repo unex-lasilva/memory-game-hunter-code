@@ -1,4 +1,5 @@
 import kotlin.io.readln;
+import kotlin.io.print
 import kotlin.random.Random
 
 val jogadores = mutableMapOf<String, MutableMap<String, Any>>()
@@ -12,6 +13,17 @@ val cores = listOf(
     "\u001B[33m", // Amarelo
     "\u001B[30m"  // Preto
 )
+val coresMap = mapOf(
+    "\u001B[31m" to "vermelho",
+    "\u001B[32m" to "verde",
+    "\u001B[33m" to "amarelo",
+    "\u001B[34m" to "azul",
+    "\u001B[35m" to "roxo",
+    "\u001B[36m" to "ciano",
+    "\u001B[37m" to "branco",
+    "\u001B[30m" to "preto"
+)
+
 
 val reset = "\u001B[0m"
 
@@ -73,135 +85,133 @@ fun main() {
     }
 
 // Henrique
-// fun iniciarJogo() {
-//     val (linhas, colunas) = capturarTamanhoTabuleiro()
-//     val tabuleiro = criarTabuleiro(linhas, colunas)
-//     val revelados = mutableSetOf<Pair<Int, Int>>()
-//     val paresEncontrados = mutableSetOf<String>()
-//     var ultimaEscolha: Pair<Int, Int>? = null
-
-//     while (paresEncontrados.size < (linhas * colunas) / 2) {
-//         exibirPontuacao();
-//         exibirTabuleiro(tabuleiro, revelados)
-//         print("Escolha uma linha: ")
-//         var linha = readln().toInt()
-//         linha -= 1
-//         print("Escolha uma coluna: ")
-//         var coluna = readln().toInt()
-//         coluna -= 1
-    
-//         if (linha in 0 until linhas && coluna in 0 until colunas) {
-//             revelados.add(linha to coluna)
-//             exibirTabuleiro(tabuleiro, revelados)
-    
-//             if (ultimaEscolha == null) {
-//                 ultimaEscolha = linha to coluna
-//             } else {
-//                 val (linhaAnterior, colunaAnterior) = ultimaEscolha
-//                 val valorAnterior = tabuleiro[linhaAnterior][colunaAnterior].second
-//                 val valorAtual = tabuleiro[linha][coluna].second
-    
-//                 if (valorAtual == valorAnterior) {
-//                     paresEncontrados.add(valorAtual)
-//                 } else {
-//                     println("Pares errados!")
-//                     println("==============================================")
-//                     Thread.sleep(2000) // Aguarda 2 segundos antes de resetar
-//                     revelados.remove(ultimaEscolha)
-//                     revelados.remove(linha to coluna)
-                    
-//                 }
-//                 ultimaEscolha = null
-//             }
-//         } else {
-//             println("Posição inválida!")
-//         }
-//     }
-//     println("Parabéns! Você encontrou todos os pares!")
-// }
-
 fun iniciarJogo() {
     val (linhas, colunas) = capturarTamanhoTabuleiro()
     val tabuleiro = criarTabuleiro(linhas, colunas)
     val revelados = mutableSetOf<Pair<Int, Int>>()
+    val paresFixos = mutableSetOf<Pair<Int, Int>>()
     val paresEncontrados = mutableSetOf<String>()
     var ultimaEscolha: Pair<Int, Int>? = null
-
     var jogadorAtual = nomeJogador1
+    var tentativas = 0
 
     while (paresEncontrados.size < (linhas * colunas) / 2) {
-        exibirPontuacao()
-        exibirTabuleiro(tabuleiro, revelados)
 
-        println("$jogadorAtual , escolha uma linha: ")
-        var linha = readln().toInt() - 1
-        println("$jogadorAtual , escolha uma coluna: ")
-        var coluna = readln().toInt() - 1
+        try {
+            if (tentativas == 3) {
+                jogadorAtual = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
+                tentativas = 0
+            }
 
-        if (linha in 0 until linhas && coluna in 0 until colunas) {
-            revelados.add(linha to coluna)
+            exibirPontuacao()
+            exibirTabuleiro(tabuleiro, revelados)
+
+            println("$jogadorAtual, escolha uma linha: ")
+            val linha = readln().toInt() - 1
+            println("$jogadorAtual, escolha uma coluna: ")
+            val coluna = readln().toInt() - 1
+
+            // Verificação de entrada válida
+            if (linha !in 0 until linhas || coluna !in 0 until colunas) {
+                println("Posição inválida! Escolha dentro do tabuleiro.")
+                tentativas = tentativas + 1
+                continue
+            }
+            
+
+            val escolhaAtual = linha to coluna
+
+            // Impedir que o jogador escolha a mesma carta duas vezes seguidas
+            if (escolhaAtual == ultimaEscolha) {
+                println("Você escolheu a mesma carta! Escolha uma posição diferente.")
+                tentativas = tentativas + 1
+                continue
+            }
+
+            // Impedir que o jogador escolha uma carta já fixada
+            if (escolhaAtual in paresFixos) {
+                println("Esta carta já foi encontrada! Escolha outra posição.")
+                tentativas = tentativas + 1
+                continue
+            }
+
+
+            revelados.add(escolhaAtual)
             exibirTabuleiro(tabuleiro, revelados)
 
             if (ultimaEscolha == null) {
-                ultimaEscolha = linha to coluna
+                ultimaEscolha = escolhaAtual
             } else {
                 val (linhaAnterior, colunaAnterior) = ultimaEscolha
                 val (corAnterior, valorAnterior) = tabuleiro[linhaAnterior][colunaAnterior]
                 val (corAtual, valorAtual) = tabuleiro[linha][coluna]
-
-                
-                
-                
+                val corAtualNome = coresMap[corAtual] ?: corAtual  // Se não encontrar, mantém o valor original
+                var pontos: Int = 0
 
                 if (valorAtual == valorAnterior) {
-                    paresEncontrados.add(valorAtual)
                     println("Par encontrado!")
-
-                    val corJogador = jogadores[jogadorAtual]?.get("cor") as String
-                val adversario = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
-                val corAdversario = jogadores[adversario]?.get("cor") as String
-                
-                    // Pontuação conforme regras
-                    when {
-                        corAtual == cores[3] -> { // Fundo preto
-                            atualizarPontuacao(jogadorAtual, 50)
-                        }
-                        corAtual == cores[2] -> { // Fundo amarelo
-                            atualizarPontuacao(jogadorAtual, 1)
-                        }
-                        corAtual == corJogador -> { // Fundo da própria cor
-                            atualizarPontuacao(jogadorAtual, 5)
-                        }
-                        corAtual == corAdversario -> { // Fundo do adversário
-                            atualizarPontuacao(jogadorAtual, 1)
-                        }
-                    }
-                } else {
-                    println("Pares errados!")
+                    paresFixos.add(ultimaEscolha)
+                    paresFixos.add(escolhaAtual)
                     val corJogador = jogadores[jogadorAtual]?.get("cor") as String
                     val adversario = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
                     val corAdversario = jogadores[adversario]?.get("cor") as String
+
+                    // Pontuação conforme regras
+                    if (corAtual == cores[3]) { // Fundo preto
+                        pontos = 50
+                    }
+                    if (corAtualNome == corAdversario) { // Fundo do adversário
+                        pontos = -2
+                    }
+                    if (corAtual == cores[2]) { // Fundo amarelo
+                        pontos = 1
+                    }
+                    if (corAtualNome == corJogador) { // Fundo da própria cor
+                        pontos = 5
+                    }
+                
+                    println("Pontos: $pontos") // DEBUG
+                    atualizarPontuacao(jogadorAtual, pontos)
+                    paresEncontrados.add(valorAtual)
+                    Thread.sleep(1000)
+
+                }else {
+                    val corJogador = jogadores[jogadorAtual]?.get("cor") as String
+                    val adversario = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
+                    val corAdversario = jogadores[adversario]?.get("cor") as String
+
+                    println("Os valores são diferentes! Tente novamente.")
+
+                    if (corAtual == cores[3] || corAnterior == cores[3]) { // Fundo preto
+                        pontos = -50
+                    }
+
+                    if (corAtualNome == corJogador || corAnterior == corAdversario) { // Fundo do adversário
+                        pontos = -2
+                    }
                     
-                    if (corAtual == cores[3] || corAnterior == cores[3]) { // Se errou par preto
-                        atualizarPontuacao(jogadorAtual, -50)
-                    }
-
-                    if (corAtual == corAdversario || corAnterior == corAdversario) { // Se errou par do adversário
-                        atualizarPontuacao(jogadorAtual, -2)
-                    }
-
-                    Thread.sleep(2000)
-                    revelados.remove(ultimaEscolha)
-                    revelados.remove(linha to coluna)
+                    atualizarPontuacao(jogadorAtual, pontos)
+                    Thread.sleep(1000)
+                    revelados.removeIf { it !in paresFixos }
                 }
                 ultimaEscolha = null
                 jogadorAtual = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
             }
-        } else {
-            println("Posição inválida!")
+        } catch (e: Exception) {
+            println("Erro na entrada! Digite um número válido para a posição da carta.")
+            tentativas = tentativas + 1
         }
     }
+
     println("Parabéns! Você encontrou todos os pares!")
+    if (jogadores[nomeJogador1]?.get("pontuacao") as Int > jogadores[nomeJogador2]?.get("pontuacao") as Int) {
+        println("O vencedor é: $nomeJogador1")
+    } else {
+        println("O vencedor é: $nomeJogador2")
+    }
+    exibirPontuacao()
+
+
 }
 
 // Arthur
@@ -221,7 +231,7 @@ fun capturarTamanhoTabuleiro(): Pair<Int, Int> {
             "b" -> return Pair(6, 6)
             "c" -> return Pair(8, 8)
             "d" -> return Pair(10, 10)
-            else -> println("Opção inválida! Tente novamente.\n")
+            else -> println("Por favor, escolha uma das opções de tamanho de tabuleiro disponíveis.\n")
         }
     }
 }
@@ -319,8 +329,8 @@ fun exibirRegras() {
     11. Se o participante encontrar um par de cartas com o fundo da cor de seu adversário e errar, perde 2 pontos.
     Porém, se acertar, ganha apenas 1 ponto.
     12. O participante não pode ter pontuação negativa. Se perder mais pontos do que possui, ficará com a pontuação zerada.
-    13. Se o participante encontrar uma carta com fundo preto e errar o seu par, perde o jogo, mesmo que tenha a pontuação superior à do adversário.
-    Mas se acertar, ganha o jogo.
+    13. Se o participante encontrar uma carta com fundo preto e errar o seu par, perde 50 pontos, mesmo que tenha a pontuação superior à do adversário.
+    Mas se acertar, ganha 50 pontos.
     ===========================================================================================================
     REGRAS DE INTERAÇÃO DURANTE O JOGO:
     14. Se o participante informar uma opção de tamanho de tabuleiro inválida, será exibida a seguinte mensagem:
@@ -336,18 +346,11 @@ fun exibirRegras() {
 }
 
 // Laysa
-// fun atualizarPontuacao(jogador: String, pontos: Int) {
-//     val pontuacaoAtual = jogadores[jogador]?.get("pontuacao") as Int
-//     val novaPontuacao = maxOf(0, pontuacaoAtual + pontos)
-//     jogadores[jogador]?.set("pontuacao", novaPontuacao)
-//     // println("$jogador ganhou $pontos pontos! Pontuação atual: $novaPontuacao")
-// }
-
 fun atualizarPontuacao(jogador: String, pontos: Int) {
-    val pontuacaoAtual = jogadores[jogador]?.get("pontuacao") as Int
-    val novaPontuacao = maxOf(0, pontuacaoAtual + pontos) // Evita pontuação negativa
-    jogadores[jogador]?.set("pontuacao", novaPontuacao) // Agora funciona!
 }
+
+
+
 
 // Henrique
 fun criarTabuleiro(linhas: Int, colunas: Int): Array<Array<Pair<String, String>>> {
