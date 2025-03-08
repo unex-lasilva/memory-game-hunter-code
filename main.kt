@@ -200,10 +200,19 @@ fun exibirRegras() {
 
 // Laysa
 fun atualizarPontuacao(jogador: String, pontos: Int) {
+    val jogadorDados = jogadores[jogador]
+
+    if (jogadorDados != null) {
+        val pontuacaoAtual = jogadorDados["pontuacao"] as? Int ?: 0
+        val novaPontuacao = maxOf(0, pontuacaoAtual + pontos)
+
+        jogadorDados["pontuacao"] = novaPontuacao
+
+        println("$jogador ganhou $pontos pontos! Pontuação atual: $novaPontuacao\n")
+    } else {
+        println("Erro: Jogador $jogador não encontrado!")
+    }
 }
-
-
-
 
 // Henrique
 fun criarTabuleiro(linhas: Int, colunas: Int): Array<Array<Pair<String, String>>> {
