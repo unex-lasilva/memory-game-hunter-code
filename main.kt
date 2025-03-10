@@ -47,41 +47,41 @@ fun main() {
         val opcaoMenu = readln().toInt()
         when (opcaoMenu) {
     
-        1 -> {
-            println("\n=======================================")
-            println(" INICIANDO O JOGO... ")
-            println("\n=======================================")                    
-            
-            iniciarJogo()
-        }
-        2 -> {
-            println("\n=======================================")
-            println(" PONTUAÇÃO DOS PARTICIPANTES... ")
-            println("\n=======================================")
-      
-            exibirPontuacao()
-        }
-        3 -> {
-            println("\n==============================")
-            println(" REGRAS DO JOGO... ")
-            println("\n==============================")
+            1 -> {
+                println("\n=======================================")
+                println(" INICIANDO O JOGO... ")
+                println("\n=======================================")                    
+                
+                iniciarJogo()
+            }
+            2 -> {
+                println("\n=======================================")
+                println(" PONTUAÇÃO DOS PARTICIPANTES... ")
+                println("\n=======================================")
+        
+                exibirPontuacao()
+            }
+            3 -> {
+                println("\n==============================")
+                println(" REGRAS DO JOGO... ")
+                println("\n==============================")
 
-            exibirRegras()
+                exibirRegras()
+            }
+            4 -> {
+                println("\n=======================================")
+                println(" SAINDO DO JOGO... ATÉ LOGO ")
+                println("\n=======================================")
+        
+                break
+            }
+            else -> {
+                println("\n==========================================")
+                println(" OPÇÃO INVÁLIDA! TENTE NOVAMENTE ")
+                println("\n==========================================")
+            }
         }
-        4 -> {
-            println("\n=======================================")
-            println(" SAINDO DO JOGO... ATÉ LOGO ")
-            println("\n=======================================")
-     
-             break
-        }
-        else -> {
-             println("\n==========================================")
-             println(" OPÇÃO INVÁLIDA! TENTE NOVAMENTE ")
-             println("\n==========================================")
-        }
-    }
-}       catch (e: NumberFormatException) {
+    }catch (e: NumberFormatException) {
             println("\n==========================================")
             println(" ENTRADA INVÁLIDA! POR FAVOR, DIGITE UM NÚMERO. ")
             println("\n==========================================")
@@ -89,7 +89,159 @@ fun main() {
     }
 }
 
+
+// Henrique
+fun iniciarJogo() {
+    val (linhas, colunas) = capturarTamanhoTabuleiro()
+    val tabuleiro = criarTabuleiro(linhas, colunas)
+    val revelados = mutableSetOf<Pair<Int, Int>>()
+    val paresFixos = mutableSetOf<Pair<Int, Int>>()
+    val paresEncontrados = mutableSetOf<String>()
+    var ultimaEscolha: Pair<Int, Int>? = null
+
+    var jogadorAtual = nomeJogador1
+    var tentativas = 0
+
+    while (paresEncontrados.size < (linhas * colunas) / 2) {
+        try {
+            if (tentativas == 3) {
+                jogadorAtual = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
+                tentativas = 0
+            }
+
+            exibirPontuacao()
+            exibirTabuleiro(tabuleiro, revelados)
+
+            println("$jogadorAtual, escolha uma linha: ")
+            val linha = readln().toInt() - 1
+            println("$jogadorAtual, escolha uma coluna: ")
+            val coluna = readln().toInt() - 1
+
+            // Verificação de entrada válida
+            if (linha !in 0 until linhas || coluna !in 0 until colunas) {
+                println("Posição inválida! Escolha dentro do tabuleiro.")
+                tentativas = tentativas + 1
+                continue
+            }
+            
+
+            val escolhaAtual = linha to coluna
+
+            // Impedir que o jogador escolha a mesma carta duas vezes seguidas
+            if (escolhaAtual == ultimaEscolha) {
+                println("Você escolheu a mesma carta! Escolha uma posição diferente.")
+                tentativas = tentativas + 1
+                continue
+            }
+
+            // Impedir que o jogador escolha uma carta já fixada
+            if (escolhaAtual in paresFixos) {
+                println("Esta carta já foi encontrada! Escolha outra posição.")
+                tentativas = tentativas + 1
+                continue
+            }
+
+
+            revelados.add(escolhaAtual)
+            exibirTabuleiro(tabuleiro, revelados)
+
+            if (ultimaEscolha == null) {
+                ultimaEscolha = escolhaAtual
+            } else {
+                val (linhaAnterior, colunaAnterior) = ultimaEscolha
+                val (corAnterior, valorAnterior) = tabuleiro[linhaAnterior][colunaAnterior]
+                val (corAtual, valorAtual) = tabuleiro[linha][coluna]
+                val corAtualNome = coresMap[corAtual] ?: corAtual  // Se não encontrar, mantém o valor original
+                var pontos: Int = 0
+
+
+
+                if (valorAtual == valorAnterior) {
+
+                    println("Par encontrado!")
+                    paresFixos.add(ultimaEscolha)
+                    paresFixos.add(escolhaAtual)
+                    val corJogador = jogadores[jogadorAtual]?.get("cor") as String
+                    val adversario = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
+                    val corAdversario = jogadores[adversario]?.get("cor") as String
+
+                    // Pontuação conforme regras
+                    if (corAtual == cores[3]) { // Fundo preto
+                        pontos = 50
+                    }
+                    if (corAtualNome == corAdversario) { // Fundo do adversário
+                        pontos = -2
+                    }
+                    if (corAtual == cores[2]) { // Fundo amarelo
+                        pontos = 1
+                    }
+                    if (corAtualNome == corJogador) { // Fundo da própria cor
+                        pontos = 5
+                    }
+                
+                    println("Pontos: $pontos") // DEBUG
+                    atualizarPontuacao(jogadorAtual, pontos)
+                    paresEncontrados.add(valorAtual)
+                    Thread.sleep(1000)
+
+                }else {
+                    val corJogador = jogadores[jogadorAtual]?.get("cor") as String
+                    val adversario = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
+                    val corAdversario = jogadores[adversario]?.get("cor") as String
+                    println("Os valores são diferentes! Tente novamente.")
+
+                    if (corAtual == cores[3] || corAnterior == cores[3]) { // Fundo preto
+                        pontos = -50
+                    }
+
+                    if (corAtualNome == corJogador || corAnterior == corAdversario) { // Fundo do adversário
+                        pontos = -2
+                    }
+                    
+                    atualizarPontuacao(jogadorAtual, pontos)
+                    Thread.sleep(1000)
+                    revelados.removeIf { it !in paresFixos }
+                }
+                ultimaEscolha = null
+                jogadorAtual = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
+            }
+        } catch (e: Exception) {
+            println("Erro na entrada! Digite um número válido para a posição da carta.")
+            tentativas = tentativas + 1
+        }
+    }
+    println("Parabéns! Você encontrou todos os pares!")
+    if (jogadores[nomeJogador1]?.get("pontuacao") as Int > jogadores[nomeJogador2]?.get("pontuacao") as Int) {
+        println("O vencedor é: $nomeJogador1")
+    } else {
+        println("O vencedor é: $nomeJogador2")
+    }
+    exibirPontuacao()
+}
+
+
 // Arthur
+fun capturarTamanhoTabuleiro(): Pair<Int, Int> {
+    while (true) { // Loop infinito até que um valor válido seja inserido
+        println("Qual o tamanho de tabuleiro que deseja jogar?")
+        println("a: 4x4")
+        println("b: 6x6")
+        println("c: 8x8")  
+        println("d: 10x10")
+        print("Digite a opção: ")
+
+        val size = readln().trim().lowercase()
+
+        when (size) {
+            "a" -> return Pair(4, 4)
+            "b" -> return Pair(6, 6)
+            "c" -> return Pair(8, 8)
+            "d" -> return Pair(10, 10)
+            else -> println("Por favor, escolha uma das opções de tamanho de tabuleiro disponíveis.\n")
+        }
+    }
+}
+
 fun config() {
     println("Qual o apelido do(a) participante 1? ")
     print("Digite o apelido: ")
