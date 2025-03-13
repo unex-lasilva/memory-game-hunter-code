@@ -169,15 +169,19 @@ fun iniciarJogo() {
                     if (corAtual == cores[3]) { // Fundo preto
                         pontos = 50
                     }
+                    if (corAtual == cores[1] || corAtual == cores[0]) { // Fundo azul ou vermelho
+                        if (corAtualNome == corJogador) { // Fundo da própria cor
+                            pontos = 5
+                        }
+                        pontos = 1
+                    }
                     if (corAtualNome == corAdversario) { // Fundo do adversário
                         pontos = -2
                     }
                     if (corAtual == cores[2]) { // Fundo amarelo
                         pontos = 1
                     }
-                    if (corAtualNome == corJogador) { // Fundo da própria cor
-                        pontos = 5
-                    }
+                    
                 
                     println("Pontos: $pontos") // DEBUG
                     atualizarPontuacao(jogadorAtual, pontos)
@@ -194,7 +198,8 @@ fun iniciarJogo() {
                         pontos = -50
                     }
 
-                    if (corAtualNome == corJogador || corAnterior == corAdversario) { // Fundo do adversário
+
+                    if (corAtualNome == corAdversario || corAnterior == corAdversario) { // Fundo do adversário
                         pontos = -2
                     }
                     
