@@ -99,11 +99,13 @@ fun iniciarJogo() {
     val paresFixos = mutableSetOf<Pair<Int, Int>>()
     val paresEncontrados = mutableSetOf<String>()
     var ultimaEscolha: Pair<Int, Int>? = null
+    zerarPontuacao()
 
     var jogadorAtual = nomeJogador1
     var tentativas = 0
 
     while (paresEncontrados.size < (linhas * colunas) / 2) {
+
         try {
             if (tentativas == 3) {
                 jogadorAtual = if (jogadorAtual == nomeJogador1) nomeJogador2 else nomeJogador1
@@ -174,8 +176,9 @@ fun iniciarJogo() {
                     if (corAtual == cores[1] || corAtual == cores[0]) { // Fundo azul ou vermelho
                         if (corAtualNome == corJogador) { // Fundo da própria cor
                             pontos = 5
+                        }else{
+                            pontos = 1
                         }
-                        pontos = 1
                     }
                     if (corAtualNome == corAdversario) { // Fundo do adversário
                         pontos = -2
@@ -454,3 +457,8 @@ fun atribuirCores(pares: List<String>): Map<String, String> {
     return coresMap
 }
 
+fun zerarPontuacao() {
+    jogadores.forEach { (nome, info) ->
+        info["pontuacao"] = 0
+    }
+}
