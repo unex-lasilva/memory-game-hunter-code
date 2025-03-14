@@ -420,14 +420,37 @@ fun exibirTabuleiro(tabuleiro: Array<Array<Pair<String, String>>>, revelados: Se
 
 // Arthur
 fun atribuirCores(pares: List<String>): Map<String, String> {
-    val coresDisponiveis = cores.filter { it != cores[3] }.shuffled()
+    val total = pares.size
+    val redCount = (total * 0.25).toInt()
+    val blueCount = (total * 0.25).toInt()
+    val blackCount = 1
+    val yellowCount = total - redCount - blueCount - blackCount
+
+    val shuffledPares = pares.shuffled()
     val coresMap = mutableMapOf<String, String>()
-    val indicePreto = (pares.indices).random()
-    
-    pares.forEachIndexed { index, par ->
-        val cor = if (index == indicePreto) cores[3] else coresDisponiveis[index % coresDisponiveis.size]
-        coresMap[par] = cor
+    var index = 0
+
+    // Atribuir 25% de vermelho (cores[0])
+    for (i in 0 until redCount) {
+        coresMap[shuffledPares[index]] = cores[0]
+        index++
     }
-    
+    // Atribuir 25% de azul (cores[1])
+    for (i in 0 until blueCount) {
+        coresMap[shuffledPares[index]] = cores[1]
+        index++
+    }
+    // Atribuir 1 cor preta (cores[3])
+    if (index < total) {
+        coresMap[shuffledPares[index]] = cores[3]
+        index++
+    }
+    // Atribuir o restante com amarelo (cores[2])
+    while (index < total) {
+        coresMap[shuffledPares[index]] = cores[2]
+        index++
+    }
+
     return coresMap
 }
+
