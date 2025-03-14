@@ -1,6 +1,7 @@
 import kotlin.io.readln;
 import kotlin.io.print
 import kotlin.random.Random
+import corJogador1
 
 val jogadores = mutableMapOf<String, MutableMap<String, Any>>()
 var nomeJogador1: String = "PARTICIPANTE01"
@@ -152,6 +153,7 @@ fun iniciarJogo() {
                 val (corAnterior, valorAnterior) = tabuleiro[linhaAnterior][colunaAnterior]
                 val (corAtual, valorAtual) = tabuleiro[linha][coluna]
                 val corAtualNome = coresMap[corAtual] ?: corAtual  // Se não encontrar, mantém o valor original
+                val corAnteriorNome = coresMap[corAnterior] ?: corAnterior  // Se não encontrar, mantém o valor original
                 var pontos: Int = 0
 
 
@@ -199,7 +201,7 @@ fun iniciarJogo() {
                     }
 
 
-                    if (corAtualNome == corAdversario || corAnterior == corAdversario) { // Fundo do adversário
+                    if (corAnteriorNome == corAdversario) { // Fundo do adversário
                         pontos = -2
                     }
                     
