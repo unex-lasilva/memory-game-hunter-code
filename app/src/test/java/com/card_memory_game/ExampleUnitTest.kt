@@ -1,4 +1,4 @@
-package com.memory_game
+package com.card_memory_game
 
 import org.junit.Test
 

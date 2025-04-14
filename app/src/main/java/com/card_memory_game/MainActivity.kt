@@ -1,9 +1,8 @@
-package com.memory_game
+package com.card_memory_game
 
-
-import com.memory_game.Model.MemoryCard
-import com.memory_game.Model.Player
-import com.memory_game.Logic.GameState
+import com.card_memory_game.Model.MemoryCard
+import com.card_memory_game.Model.Player
+import com.card_memory_game.Logic.GameState
 
 
 import android.os.Bundle
@@ -71,12 +70,6 @@ fun MemoryGameScreen() {
             toReset = null
         }
     }
-
-
-
-
-
-
 
     Surface(
         modifier = Modifier.fillMaxWidth()
@@ -262,7 +255,7 @@ fun MemoryCardView(card: MemoryCard, size: Int, onClick: () -> Unit){
             val naipes = listOf("♠️","♣️","♥️","♦️")
 
             // Aqui você pode mostrar um símbolo de verso, tipo "?"
-            Text(text = naipes.random(), style = MaterialTheme.typography.titleMedium)
+            Text(text = naipes.random(), style = MaterialTheme.typography.titleMedium, modifier = Modifier.rotate(rotation))
         }
     }
 

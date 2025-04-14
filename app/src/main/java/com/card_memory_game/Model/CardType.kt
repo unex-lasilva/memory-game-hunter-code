@@ -1,4 +1,4 @@
-package com.memory_game.Model
+package com.card_memory_game.Model
 
 sealed class CardType {
     data object Normal : CardType()

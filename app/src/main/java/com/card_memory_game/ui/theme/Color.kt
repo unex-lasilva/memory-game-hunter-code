@@ -1,4 +1,4 @@
-package com.memory_game.ui.theme
+package com.card_memory_game.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

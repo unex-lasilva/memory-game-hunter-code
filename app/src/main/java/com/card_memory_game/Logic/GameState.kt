@@ -1,8 +1,8 @@
-package com.memory_game.Logic
+package com.card_memory_game.Logic
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import com.memory_game.Model.*
+import com.card_memory_game.Model.*
 
 
 class GameState(val players: List<Player>, val gameSize: Int) {
