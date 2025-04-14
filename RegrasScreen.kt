@@ -66,10 +66,6 @@ fun RegrasTela() {
         Regra("13. Se errar um par com fundo preto, perde 50 pontos. Se acertar, ganha 50 pontos.")
 
         Spacer(modifier = Modifier.height(32.dp))
-
-        TituloSecao("Regras de Interação\nDurante o Jogo")
-        Regra("14. Informe a linha e a coluna da carta que deseja virar.")
-        Regra("15. Se a posição for inválida, aparecerá: 'Posição da carta inválida'. São 3 tentativas antes de perder a vez.")
     }
 }
 
