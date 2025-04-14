@@ -63,7 +63,7 @@ fun RegrasTela() {
         Regra("10. Se encontrar um par com a sua cor, ganha 5 pontos.")
         Regra("11. Se encontrar um par com a cor do adversário e errar, perde 2 pontos. Se acertar, ganha 1 ponto.")
         Regra("12. Pontuação mínima é 0. Não pode ser negativa.")
-        Regra("13. Se errar um par com fundo preto, perde o jogo. Se acertar, vence.")
+        Regra("13. Se errar um par com fundo preto, perde 50 pontos. Se acertar, ganha 50 pontos.")
 
         Spacer(modifier = Modifier.height(32.dp))
 
