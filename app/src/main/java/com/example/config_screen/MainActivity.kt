@@ -15,10 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.config_screen.ui.theme.Config_screenTheme
+import com.example.config_screen.viewmodel.ConfigViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +51,8 @@ enum class TamanhoGrid(val label: String) {
 
 @Composable
 fun TelaConfiguracao(modifier: Modifier = Modifier) {
+    val viewModel: ConfigViewModel = viewModel()
+
     var nomeJogador1 by remember { mutableStateOf("") }
     var nomeJogador2 by remember { mutableStateOf("") }
 
@@ -126,9 +129,25 @@ fun TelaConfiguracao(modifier: Modifier = Modifier) {
 
             Button(
                 onClick = {
-                    println("Jogador 1: $nomeFinal1 (${corJogador1?.label})")
-                    println("Jogador 2: $nomeFinal2 (${corJogador2?.label})")
-                    println("Grid Selecionado: ${gridSelecionado?.label}")
+                    viewModel.salvarJogadores(
+                        nomeFinal1,
+                        corJogador1?.label?.lowercase() ?: "",
+                        nomeFinal2,
+                        corJogador2?.label?.lowercase() ?: ""
+                    )
+
+                    viewModel.salvarTamanhoGrid(
+                        when (gridSelecionado) {
+                            TamanhoGrid.GRID_4X4 -> 4
+                            TamanhoGrid.GRID_6X6 -> 6
+                            TamanhoGrid.GRID_8X8 -> 8
+                            TamanhoGrid.GRID_10X10 -> 10
+                            else -> 0
+                        }
+                    )
+
+                    println("Jogadores: ${viewModel.jogadores}")
+                    println("Grid: ${viewModel.gridSize}")
                 },
                 enabled = corJogador1 != null && corJogador2 != null && gridSelecionado != null,
                 colors = ButtonDefaults.buttonColors(
@@ -240,13 +259,5 @@ fun GridSelector(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TelaConfiguracaoPreview() {
-    Config_screenTheme {
-        TelaConfiguracao()
     }
 }
