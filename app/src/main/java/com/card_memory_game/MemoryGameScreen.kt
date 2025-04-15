@@ -3,11 +3,6 @@ package com.card_memory_game
 import com.card_memory_game.Model.MemoryCard
 import com.card_memory_game.Model.Player
 import com.card_memory_game.Logic.GameState
-
-
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,18 +28,6 @@ import androidx.compose.ui.unit.sp
 
 
 import kotlinx.coroutines.delay
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MemoryGameScreen()
-        }
-    }
-}
-
-
-
 
 @Composable
 fun MemoryGameScreen() {

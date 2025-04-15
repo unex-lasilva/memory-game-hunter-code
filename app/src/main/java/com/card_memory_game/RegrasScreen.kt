@@ -1,4 +1,4 @@
-package com.example.regras
+package com.card_memory_game
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,25 +21,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.regras.ui.theme.RegrasTheme
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            RegrasTheme {
-                RegrasTela()
-            }
-        }
-    }
-}
 
 @Composable
 fun RegrasTela() {
     val scrollState = rememberScrollState()
     val gradient = Brush.verticalGradient(
-        colors = listOf(Color(0xFF4A148C), Color(0xFFAD1457)) // Roxo escuro → Rosa escuro
+        colors = listOf(Color(0xFF4A148C), Color(0xFFAD1457))
     )
 
     Column(
@@ -71,7 +58,6 @@ fun RegrasTela() {
 
 @Composable
 fun TituloSecao(text: String) {
-    // Cores de base (iguais ao fundo)
     val corRoxo = Color(0xFF4A148C)
     val corRosa = Color(0xFFAD1457)
 
@@ -114,10 +100,6 @@ fun TituloSecao(text: String) {
         )
     }
 }
-
-
-
-
 
 @Composable
 fun Regra(texto: String) {
