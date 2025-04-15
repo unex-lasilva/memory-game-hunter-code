@@ -1,4 +1,4 @@
-package com.example.config_screen.ui.theme
+package com.card_memory_game.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "config_screen"
+rootProject.name = "Card-memory-game"
 include(":app")

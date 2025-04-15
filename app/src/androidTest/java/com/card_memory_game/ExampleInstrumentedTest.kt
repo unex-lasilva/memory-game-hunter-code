@@ -1,4 +1,4 @@
-package com.example.config_screen
+package com.card_memory_game
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.config_screen", appContext.packageName)
+        assertEquals("com.card_memory_game", appContext.packageName)
     }
 }

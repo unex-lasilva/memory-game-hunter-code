@@ -1,4 +1,4 @@
-package com.example.config_screen.viewmodel
+package com.card_memory_game.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel

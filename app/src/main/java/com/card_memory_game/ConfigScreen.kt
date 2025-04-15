@@ -1,9 +1,5 @@
-package com.example.config_screen
+package com.card_memory_game
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,24 +14,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.config_screen.ui.theme.Config_screenTheme
-import com.example.config_screen.viewmodel.ConfigViewModel
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            Config_screenTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    TelaConfiguracao(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
-    }
-}
+import com.card_memory_game.viewmodel.ConfigViewModel
 
 enum class CorJogador(val label: String) {
     VERMELHO("Vermelho"),
@@ -50,125 +29,133 @@ enum class TamanhoGrid(val label: String) {
 }
 
 @Composable
-fun TelaConfiguracao(modifier: Modifier = Modifier) {
+fun ConfigScreen() {
     val viewModel: ConfigViewModel = viewModel()
 
     var nomeJogador1 by remember { mutableStateOf("") }
     var nomeJogador2 by remember { mutableStateOf("") }
-
     var corJogador1 by remember { mutableStateOf<CorJogador?>(null) }
     var corJogador2 by remember { mutableStateOf<CorJogador?>(null) }
-
     var gridSelecionado by remember { mutableStateOf<TamanhoGrid?>(null) }
 
     val nomeFinal1 = nomeJogador1.ifBlank { "PARTICIPANTE01" }
     val nomeFinal2 = nomeJogador2.ifBlank { "PARTICIPANTE02" }
 
-    val gradientBrush = Brush.verticalGradient(
-        colors = listOf(Color(0xFF6A0572), Color(0xFFD90368))
-    )
+    var iniciarJogo by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(brush = gradientBrush)
-            .padding(24.dp),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top,
-            modifier = modifier.fillMaxSize()
+    if (iniciarJogo) {
+        // Aqui você pode passar os dados via ViewModel ou outro mecanismo de navegação/estado
+        viewModel.salvarJogadores(
+            nomeFinal1,
+            corJogador1?.label?.lowercase() ?: "",
+            nomeFinal2,
+            corJogador2?.label?.lowercase() ?: ""
+        )
+
+        viewModel.salvarTamanhoGrid(
+            when (gridSelecionado) {
+                TamanhoGrid.GRID_4X4 -> 4
+                TamanhoGrid.GRID_6X6 -> 6
+                TamanhoGrid.GRID_8X8 -> 8
+                TamanhoGrid.GRID_10X10 -> 10
+                else -> 0
+            }
+        )
+
+        // Você pode substituir isso com uma navegação real
+        MemoryGameScreen() // Renderiza a próxima tela diretamente
+    } else {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        listOf(Color(0xFF6A0572), Color(0xFFD90368))
+                    )
+                )
+                .padding(24.dp),
+            color = Color.Transparent
         ) {
-            Text(
-                text = "Configuração dos Jogadores",
-                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 22.sp),
-                color = Color.White
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            StyledTextField(
-                value = nomeJogador1,
-                onValueChange = { nomeJogador1 = it },
-                label = "Nome do Jogador 1",
-                placeholder = "PARTICIPANTE01"
-            )
-
-            ColorSelector(
-                selectedColor = corJogador1,
-                otherSelectedColor = corJogador2,
-                onColorSelected = { corJogador1 = it },
-                label = "Cor do Jogador 1"
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            StyledTextField(
-                value = nomeJogador2,
-                onValueChange = { nomeJogador2 = it },
-                label = "Nome do Jogador 2",
-                placeholder = "PARTICIPANTE02"
-            )
-
-            ColorSelector(
-                selectedColor = corJogador2,
-                otherSelectedColor = corJogador1,
-                onColorSelected = { corJogador2 = it },
-                label = "Cor do Jogador 2"
-            )
-
-            Spacer(modifier = Modifier.height(40.dp))
-
-            GridSelector(
-                selectedGrid = gridSelecionado,
-                onGridSelected = { gridSelecionado = it }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Button(
-                onClick = {
-                    viewModel.salvarJogadores(
-                        nomeFinal1,
-                        corJogador1?.label?.lowercase() ?: "",
-                        nomeFinal2,
-                        corJogador2?.label?.lowercase() ?: ""
-                    )
-
-                    viewModel.salvarTamanhoGrid(
-                        when (gridSelecionado) {
-                            TamanhoGrid.GRID_4X4 -> 4
-                            TamanhoGrid.GRID_6X6 -> 6
-                            TamanhoGrid.GRID_8X8 -> 8
-                            TamanhoGrid.GRID_10X10 -> 10
-                            else -> 0
-                        }
-                    )
-
-                    println("Jogadores: ${viewModel.jogadores}")
-                    println("Grid: ${viewModel.gridSize}")
-                },
-                enabled = corJogador1 != null && corJogador2 != null && gridSelecionado != null,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF00CFFF),
-                    contentColor = Color.White,
-                    disabledContainerColor = Color(0xFF5E1B63),
-                    disabledContentColor = Color.White.copy(alpha = 0.5f)
-                ),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier.fillMaxSize()
             ) {
                 Text(
-                    text = "Começar Jogo",
-                    style = MaterialTheme.typography.titleMedium
+                    text = "Configuração dos Jogadores",
+                    style = MaterialTheme.typography.headlineSmall.copy(fontSize = 22.sp),
+                    color = Color.White
                 )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                StyledTextField(
+                    value = nomeJogador1,
+                    onValueChange = { nomeJogador1 = it },
+                    label = "Nome do Jogador 1",
+                    placeholder = "PARTICIPANTE01"
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                ColorSelector(
+                    selectedColor = corJogador1,
+                    otherSelectedColor = corJogador2,
+                    onColorSelected = { corJogador1 = it },
+                    label = "Cor do Jogador 1"
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                StyledTextField(
+                    value = nomeJogador2,
+                    onValueChange = { nomeJogador2 = it },
+                    label = "Nome do Jogador 2",
+                    placeholder = "PARTICIPANTE02"
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                ColorSelector(
+                    selectedColor = corJogador2,
+                    otherSelectedColor = corJogador1,
+                    onColorSelected = { corJogador2 = it },
+                    label = "Cor do Jogador 2"
+                )
+
+                Spacer(modifier = Modifier.height(40.dp))
+
+                GridSelector(
+                    selectedGrid = gridSelecionado,
+                    onGridSelected = { gridSelecionado = it }
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    onClick = { iniciarJogo = true },
+                    enabled = corJogador1 != null && corJogador2 != null && gridSelecionado != null,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF00CFFF),
+                        contentColor = Color.White,
+                        disabledContainerColor = Color(0xFF5E1B63),
+                        disabledContentColor = Color.White.copy(alpha = 0.5f)
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                ) {
+                    Text(
+                        text = "Começar Jogo",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             }
         }
     }
 }
+
 
 @Composable
 fun StyledTextField(

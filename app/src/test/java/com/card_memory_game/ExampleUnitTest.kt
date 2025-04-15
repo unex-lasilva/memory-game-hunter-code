@@ -1,4 +1,4 @@
-package com.example.config_screen
+package com.card_memory_game
 
 import org.junit.Test
 
