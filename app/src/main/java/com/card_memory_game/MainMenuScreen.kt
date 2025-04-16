@@ -92,7 +92,7 @@ fun MainMenuScreen(coins: Int, navController: NavController) {
 @Composable
 fun GameScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        MemoryGameScreen()    }
+        ConfigScreen()    }
 }
 
 @Composable
