@@ -43,52 +43,73 @@ class GameState(val players: List<Player>, val gameSize: Int) {
             val player = players[currentPlayerIndex]
             val adversary = players[(currentPlayerIndex + 1) % players.size]
 
-            var points = 0
+            val acertouPar = first.value == second.value
 
-            if (first.value == second.value) {
+            if (acertouPar) {
                 first.isMatched = true
                 second.isMatched = true
-
-                // Pontuação baseada nas cores
-                points = when {
-                    first.color == "Black" -> 50
-                    first.color == player.color -> 5
-                    first.color == adversary.color -> 1
-                    first.color == "Yellow" -> 1
-                    else -> 1
-                }
-
-                player.score += points
+                atualizarPontuacao(player, adversary, first, second, true)
                 selectedCards.clear()
                 checkGameFinished()
-
             } else {
-                // Penalidade
-                if (first.color == "Black") {
-                    points = -50
-                } else if (first.color == adversary.color) {
-                    points = -2
-                }
-
-
-
-                player.score += points
-
-                if (player.score < 0 ){
-                    player.score = 0
-                }
+                atualizarPontuacao(player, adversary, first, second, false)
 
                 val toReset = Pair(first, second)
                 selectedCards.clear()
                 nextPlayer()
                 return toReset
-
             }
 
         }
 
         return null
     }
+
+private fun atualizarPontuacao(
+    player: Player,
+    adversary: Player,
+    first: MemoryCard,
+    second: MemoryCard,
+    acertouPar: Boolean
+): Int {
+    var pontos = 0
+    val corPlayer = when (player.color){
+        "vermelho" -> "Red"
+        "azul" -> "Blue"
+        else -> ""
+
+    }
+    val corAdversary = when (adversary.color){
+        "vermelho" -> "Red"
+        "azul" -> "Blue"
+        else -> ""
+
+    }
+
+    if (acertouPar) {
+        val cor = first.color // ambas têm a mesma cor
+        pontos = when {
+            cor == "Black" -> 50
+            cor == corPlayer -> 5
+            cor == corAdversary -> 1
+            cor == "Yellow" -> 1
+            else -> 0
+        }
+    } else {
+        // só penaliza com base na primeira carta
+        val cor = first.color
+        pontos = when {
+            cor == "Black" -> -50
+            cor == corAdversary -> -2
+            else -> 0
+        }
+    }
+
+    player.score += pontos
+    if (player.score < 0) player.score = 0
+    
+    return pontos
+}
 
 
     fun nextPlayer() {

@@ -3,6 +3,10 @@ package com.card_memory_game
 import com.card_memory_game.Model.MemoryCard
 import com.card_memory_game.Model.Player
 import com.card_memory_game.Logic.GameState
+
+import com.card_memory_game.viewmodel.ConfigViewModel
+
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,20 +29,35 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.activity.compose.BackHandler
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 
 import kotlinx.coroutines.delay
 
 @Composable
-fun MemoryGameScreen() {
-    val nomeJogador1: String = "PARTICIPANTE01"
-    val nomeJogador2: String = "PARTICIPANTE02"
-    val corJogador1: String = "Blue"
-    val corJogador2: String = "Red"
-    val TestSize: Int = 4
+fun MemoryGameScreen(navController: NavController, viewModel: ConfigViewModel = viewModel()) {
 
-    val players = remember { listOf(Player(nomeJogador1,corJogador1), Player(nomeJogador2,corJogador2)) }
-    val gameState = remember { GameState(players, TestSize) }
+    val jogadores = viewModel.jogadores
+    val gridSize = viewModel.gridSize
+    var showExitDialog by remember { mutableStateOf(false) }
+
+    BackHandler {
+        showExitDialog = true
+    }
+
+
+    val players = remember {
+        jogadores.map { (nome, info) ->
+            Player(nome, info["cor"] as String)
+        }
+    }
+
+    val gameState = remember { GameState(players, gridSize) }
 
     var toReset by remember { mutableStateOf<Pair<MemoryCard, MemoryCard>?>(null) }
 
@@ -55,24 +74,28 @@ fun MemoryGameScreen() {
     }
 
     Surface(
-        modifier = Modifier.fillMaxWidth()
-        .background(
-            Brush.verticalGradient(
-                colors = listOf(Color(0xFF3D1D64), Color(0xFFC03C7B))
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFF3D1D64), Color(0xFFC03C7B))
+                )
             )
-        )
             .padding(top = 30.dp),
         color = Color.Transparent
 
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .clip(RoundedCornerShape(30.dp))
-                .background(Color.White.copy(alpha = 0.3f))
+                    .background(Color.White.copy(alpha = 0.3f))
 
             ) {
                 Text(
@@ -81,7 +104,9 @@ fun MemoryGameScreen() {
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(15.dp).clip(RoundedCornerShape(20.dp)))
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .clip(RoundedCornerShape(20.dp)))
             }
 
             Spacer(modifier = Modifier.height(50.dp))
@@ -94,11 +119,13 @@ fun MemoryGameScreen() {
                                 .size(90.dp)
                                 .clip(RoundedCornerShape(50.dp))
                                 .padding(10.dp)
-                                .background(color = when (it.color){
-                                    "Red" -> Color.Red
-                                    "Blue" -> Color.Blue
-                                    else -> Color.Gray
-                                }),
+                                .background(
+                                    color = when (it.color) {
+                                        "vermelho" -> Color.Red
+                                        "azul" -> Color.Blue
+                                        else -> Color.Gray
+                                    }
+                                ),
                             Alignment.Center
                         ){
                             Text(
@@ -139,7 +166,6 @@ fun MemoryGameScreen() {
 
             Spacer(modifier = Modifier.height(100.dp))
 
-            val gridSize = TestSize
             Column {
                 for (i in 0 until gameState.cards.size step gridSize) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -174,14 +200,42 @@ fun MemoryGameScreen() {
                         },
                         dismissButton = {
                             Button(onClick = {
+                                navController.navigate("mainMenu")
 
-                                // Fechar o app ou voltar à tela inicial
                             }) {
-                                Text("Sair")
+                                Text("Voltar")
+                            }
+
+                        }
+                    )
+                }
+
+
+                if (showExitDialog) {
+
+                    AlertDialog(
+                        onDismissRequest = { showExitDialog = false },
+                        title = { Text("Sair do jogo") },
+                        text = { Text("Você tem certeza que deseja sair do jogo?") },
+                        confirmButton = {
+                            Button(onClick = {
+                                navController.navigate("mainMenu")
+
+                            }) {
+                                Text("Sim")
+                            }
+
+                        },
+                        dismissButton = {
+                            Button(onClick = {
+                                showExitDialog = false
+                            }) {
+                                Text("Não")
                             }
                         }
                     )
                 }
+
 
             }
         }
@@ -190,6 +244,7 @@ fun MemoryGameScreen() {
     }
 
 }
+
 
 
 
@@ -207,19 +262,23 @@ fun MemoryCardView(card: MemoryCard, size: Int, onClick: () -> Unit){
 
     Box(
         modifier = Modifier
-            .padding(when (size){
-                8 -> 2.dp
-                10 -> 2.dp
-                else -> 4.dp
-            })
+            .padding(
+                when (size) {
+                    8 -> 2.dp
+                    10 -> 2.dp
+                    else -> 4.dp
+                }
+            )
             .clickable { onClick() }
-            .size(when (size){
-                4 -> 60.dp
-                6 -> 50.dp
-                8 -> 40.dp
-                10 -> 30.dp
-                else -> 30.dp
-            })
+            .size(
+                when (size) {
+                    4 -> 60.dp
+                    6 -> 50.dp
+                    8 -> 40.dp
+                    10 -> 30.dp
+                    else -> 30.dp
+                }
+            )
             .rotate(rotation)
             .alpha(alpha)
             .background(
@@ -249,5 +308,9 @@ fun MemoryCardView(card: MemoryCard, size: Int, onClick: () -> Unit){
 @Preview
 @Composable
 fun MemoryCardView(){
-    MemoryGameScreen()
+    val navController = rememberNavController()
+    val configViewModel: ConfigViewModel = viewModel()
+
+
+    MemoryGameScreen( navController, configViewModel)
 }

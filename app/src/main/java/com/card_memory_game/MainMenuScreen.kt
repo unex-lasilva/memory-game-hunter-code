@@ -22,6 +22,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavController
 import android.app.Activity
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.card_memory_game.viewmodel.ConfigViewModel
+
 
 val cleanRed = Color(0xFFF25781)
 val cleanYellow = Color(0xFFF2BF27)
@@ -90,15 +93,20 @@ fun MainMenuScreen(coins: Int, navController: NavController) {
 }
 
 @Composable
-fun GameScreen() {
+fun GameScreen(navController: NavController) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        ConfigScreen()    }
+        ConfigScreen(navController = navController)    }
 }
 
 @Composable
-fun ScoreScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Tela de Pontuação")
+fun ScoreScreen(navController: NavController) {
+    val configViewModel: ConfigViewModel = viewModel()
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        TelaScore(navController = navController,configViewModel)
     }
 }
 
@@ -156,8 +164,10 @@ fun AppNavigation() {
 
     NavHost(navController = navController, startDestination = "mainMenu") {
         composable("mainMenu") { MainMenuScreen(coins = 100, navController = navController) }
-        composable("game") { GameScreen() }
-        composable("score") { ScoreScreen() }
+        composable("game") { GameScreen(navController = navController) }
+        composable("score") {
+            ScoreScreen(navController = navController)
+        }
         composable("rules") { RulesScreen() }
     }
 }
