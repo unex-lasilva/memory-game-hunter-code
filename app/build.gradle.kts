@@ -62,4 +62,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation ("io.coil-kt:coil-compose:2.0.0")
+    implementation ("io.coil-kt:coil-svg:2.0.0")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 }
