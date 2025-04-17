@@ -1,6 +1,5 @@
 package com.card_memory_game
 
-
 import com.card_memory_game.Model.MemoryCard
 import com.card_memory_game.Model.Player
 import com.card_memory_game.Logic.GameState
@@ -41,22 +40,35 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 
 @Composable
-fun ScoreScreen(viewModel: ConfigViewModel = viewModel()) {
+fun TelaScore(    navController: NavController,
+                  viewModel: ConfigViewModel = viewModel()) {
 
-    val jogadores = viewModel.jogadores
+
     var showExitDialog by remember { mutableStateOf(false) }
 
+    // Quando o botão voltar for pressionado
     BackHandler {
-        showExitDialog = true
+        navController.popBackStack() // Isso volta para a tela anterior
     }
 
+    val jogadores = viewModel.jogadores
+
     val players = remember {
-        jogadores.map { (nome, info) ->
-            Player(nome, info["cor"] as String)
+        if(!jogadores.isEmpty()){
+            jogadores.map { (nome, info) ->
+                Player(nome, info["cor"] as String)
+            }
+        }else{
+            listOf(
+                Player("PARTICIPANTE01", "azul"),
+                Player("PARTICIPANTE02", "vermelho")
+            )
         }
+
     }
-    
-    val gameState = remember { GameState(players, 4) }
+
+
+
 
     Surface(
         modifier = Modifier
@@ -66,7 +78,7 @@ fun ScoreScreen(viewModel: ConfigViewModel = viewModel()) {
                     colors = listOf(Color(0xFF3D1D64), Color(0xFFC03C7B))
                 )
             )
-            .padding(top = 30.dp),
+            .padding(top = 130.dp),
         color = Color.Transparent
 
     ) {
@@ -80,11 +92,13 @@ fun ScoreScreen(viewModel: ConfigViewModel = viewModel()) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(30.dp))
-                    .background(Color.White.copy(alpha = 0.3f))
+                    .background(Color.White.copy(alpha = 0.3f)),
+                    horizontalArrangement =  Arrangement.Center,
 
-            ) {
+
+                ) {
                 Text(
-                    text = "Jogador atual:" + " ${gameState.players[gameState.currentPlayerIndex].name}",
+                    text = "Pontuação dos Jogadores",
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -150,6 +164,7 @@ fun ScoreScreen(viewModel: ConfigViewModel = viewModel()) {
             }
 
 
+
         }
 
 
@@ -157,8 +172,15 @@ fun ScoreScreen(viewModel: ConfigViewModel = viewModel()) {
 
 }
 
+
+
+
 @Preview
 @Composable
-fun ScoreScreenView(){
-    ScoreScreen(viewModel = viewModel())
+fun TelaScoreView() {
+
+    val configViewModel: ConfigViewModel = viewModel()
+    val navController = rememberNavController()
+
+    TelaScore(navController = navController, configViewModel)
 }

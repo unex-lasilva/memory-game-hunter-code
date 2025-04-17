@@ -14,6 +14,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.card_memory_game.viewmodel.ConfigViewModel
 
@@ -30,7 +31,7 @@ enum class TamanhoGrid(val label: String) {
 }
 
 @Composable
-fun ConfigScreen() {
+fun ConfigScreen(navController: NavController) {
     val viewModel: ConfigViewModel = viewModel()
 
     var nomeJogador1 by remember { mutableStateOf("") }
@@ -64,7 +65,7 @@ fun ConfigScreen() {
         )
 
         // Você pode substituir isso com uma navegação real
-        MemoryGameScreen( navController = rememberNavController(), viewModel)// Renderiza a próxima tela diretamente
+        MemoryGameScreen( navController = navController, viewModel)// Renderiza a próxima tela diretamente
     } else {
         Surface(
             modifier = Modifier

@@ -51,9 +51,6 @@ fun MemoryGameScreen(navController: NavController, viewModel: ConfigViewModel = 
     }
 
 
-
-
-
     val players = remember {
         jogadores.map { (nome, info) ->
             Player(nome, info["cor"] as String)
@@ -203,10 +200,10 @@ fun MemoryGameScreen(navController: NavController, viewModel: ConfigViewModel = 
                         },
                         dismissButton = {
                             Button(onClick = {
-                                irParaInicio(navController)
+                                navController.navigate("mainMenu")
 
                             }) {
-                                Text("Sim")
+                                Text("Voltar")
                             }
 
                         }
@@ -222,7 +219,8 @@ fun MemoryGameScreen(navController: NavController, viewModel: ConfigViewModel = 
                         text = { Text("Você tem certeza que deseja sair do jogo?") },
                         confirmButton = {
                             Button(onClick = {
-                                irParaInicio(navController)
+                                navController.navigate("mainMenu")
+
                             }) {
                                 Text("Sim")
                             }
@@ -247,11 +245,6 @@ fun MemoryGameScreen(navController: NavController, viewModel: ConfigViewModel = 
 
 }
 
-fun irParaInicio(navController: NavController) {
-    navController.navigate("mainMenu") {
-        popUpTo("game") { inclusive = true }
-    }
-}
 
 
 
@@ -315,5 +308,9 @@ fun MemoryCardView(card: MemoryCard, size: Int, onClick: () -> Unit){
 @Preview
 @Composable
 fun MemoryCardView(){
-    MemoryGameScreen( navController = rememberNavController(), viewModel = viewModel())
+    val navController = rememberNavController()
+    val configViewModel: ConfigViewModel = viewModel()
+
+
+    MemoryGameScreen( navController, configViewModel)
 }
