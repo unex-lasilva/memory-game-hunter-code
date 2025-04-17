@@ -1,5 +1,6 @@
 package com.card_memory_game
 
+
 import com.card_memory_game.Model.MemoryCard
 import com.card_memory_game.Model.Player
 import com.card_memory_game.Logic.GameState
@@ -40,41 +41,22 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 
 @Composable
-fun MemoryGameScreen(navController: NavController, viewModel: ConfigViewModel = viewModel()) {
+fun ScoreScreen(viewModel: ConfigViewModel = viewModel()) {
 
     val jogadores = viewModel.jogadores
-    val gridSize = viewModel.gridSize
     var showExitDialog by remember { mutableStateOf(false) }
 
     BackHandler {
         showExitDialog = true
     }
 
-
-
-
-
     val players = remember {
         jogadores.map { (nome, info) ->
             Player(nome, info["cor"] as String)
         }
     }
-
-    val gameState = remember { GameState(players, gridSize) }
-
-    var toReset by remember { mutableStateOf<Pair<MemoryCard, MemoryCard>?>(null) }
-
-
-
-    // Se houver cartas para virar de volta, aguarde e depois vire
-    LaunchedEffect(toReset) {
-        toReset?.let { pair ->
-            delay(1000)
-            pair.first.isFaceUp = false
-            pair.second.isFaceUp = false
-            toReset = null
-        }
-    }
+    
+    val gameState = remember { GameState(players, 4) }
 
     Surface(
         modifier = Modifier
@@ -167,153 +149,16 @@ fun MemoryGameScreen(navController: NavController, viewModel: ConfigViewModel = 
                 }
             }
 
-            Spacer(modifier = Modifier.height(100.dp))
 
-            Column {
-                for (i in 0 until gameState.cards.size step gridSize) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        for (j in 0 until gridSize) {
-                            if (i + j < gameState.cards.size) {
-                                val card = gameState.cards[i + j]
-                                MemoryCardView(card, gridSize) {
-                                    val reset = gameState.onCardClicked(card)
-                                    if (reset != null) {
-                                        toReset = reset
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (gameState.jogoFinalizado) {
-                    AlertDialog(
-                        onDismissRequest = { /* Do nothing ou algo opcional */ },
-                        title = {
-                            Text("Fim de Jogo")
-                        },
-                        text = {
-                            Text("O vencedor é: ${gameState.jogadorVencedor?.name} com ${gameState.jogadorVencedor?.score} pontos!")
-                        },
-                        confirmButton = {
-                            Button(onClick = {
-                                gameState.resetGame()
-                            }) {
-                                Text("Jogar novamente")
-                            }
-                        },
-                        dismissButton = {
-                            Button(onClick = {
-                                irParaInicio(navController)
-
-                            }) {
-                                Text("Sim")
-                            }
-
-                        }
-                    )
-                }
-
-
-                if (showExitDialog) {
-
-                    AlertDialog(
-                        onDismissRequest = { showExitDialog = false },
-                        title = { Text("Sair do jogo") },
-                        text = { Text("Você tem certeza que deseja sair do jogo?") },
-                        confirmButton = {
-                            Button(onClick = {
-                                irParaInicio(navController)
-                            }) {
-                                Text("Sim")
-                            }
-
-                        },
-                        dismissButton = {
-                            Button(onClick = {
-                                showExitDialog = false
-                            }) {
-                                Text("Não")
-                            }
-                        }
-                    )
-                }
-
-
-            }
         }
 
 
     }
 
 }
-
-fun irParaInicio(navController: NavController) {
-    navController.navigate("mainMenu") {
-        popUpTo("game") { inclusive = true }
-    }
-}
-
-
-
-@Composable
-fun MemoryCardView(card: MemoryCard, size: Int, onClick: () -> Unit){
-    val rotation by animateFloatAsState(if (card.isFaceUp) 0f else 180f)
-    val alpha by animateFloatAsState(if (card.isMatched) 0.3f else 1f)
-    val corCarta = when (card.color) {
-        "Blue" -> Color.Blue
-        "Red" -> Color.Red
-        "Yellow" ->  Color(0xFFF2BF27)
-        else -> Color.Gray
-    }
-
-
-    Box(
-        modifier = Modifier
-            .padding(
-                when (size) {
-                    8 -> 2.dp
-                    10 -> 2.dp
-                    else -> 4.dp
-                }
-            )
-            .clickable { onClick() }
-            .size(
-                when (size) {
-                    4 -> 60.dp
-                    6 -> 50.dp
-                    8 -> 40.dp
-                    10 -> 30.dp
-                    else -> 30.dp
-                }
-            )
-            .rotate(rotation)
-            .alpha(alpha)
-            .background(
-                color = if (card.isFaceUp) corCarta else Color.White,
-                shape = RoundedCornerShape(10.dp)
-            ),
-        contentAlignment = Alignment.Center
-    )  {
-        if (card.isFaceUp || card.isMatched) {
-            Text(
-                text = card.value,
-                color = Color.White,
-                style = MaterialTheme.typography.titleMedium
-            )
-        } else {
-            val naipes = listOf("♠️","♣️","♥️","♦️")
-
-            // Aqui você pode mostrar um símbolo de verso, tipo "?"
-            Text(text = naipes.random(), style = MaterialTheme.typography.titleMedium, modifier = Modifier.rotate(rotation))
-        }
-    }
-
-}
-
-
 
 @Preview
 @Composable
-fun MemoryCardView(){
-    MemoryGameScreen( navController = rememberNavController(), viewModel = viewModel())
+fun ScoreScreenView(){
+    ScoreScreen(viewModel = viewModel())
 }

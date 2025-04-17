@@ -14,6 +14,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.card_memory_game.viewmodel.ConfigViewModel
 
 enum class CorJogador(val label: String) {
@@ -63,7 +64,7 @@ fun ConfigScreen() {
         )
 
         // Você pode substituir isso com uma navegação real
-        MemoryGameScreen(viewModel)// Renderiza a próxima tela diretamente
+        MemoryGameScreen( navController = rememberNavController(), viewModel)// Renderiza a próxima tela diretamente
     } else {
         Surface(
             modifier = Modifier

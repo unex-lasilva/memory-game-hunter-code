@@ -98,7 +98,7 @@ fun GameScreen() {
 @Composable
 fun ScoreScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Tela de Pontuação")
+        ScoreScreen()
     }
 }
 
