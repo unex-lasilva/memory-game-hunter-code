@@ -42,3 +42,12 @@ Vamos exemplificar essas regras iniciais para vocês. Um exemplo sempre é uma b
 2. *Henrique Estrela Santos* - *henriqueestrela2004@gmail.com*
 3. *Laysa Lima de Pinho* - *laysalimadepinho@gmail.com*
 4. *Matheus Kaick Rocha da Fonseca* - *matheuskaick70@gmail.com*
+
+
+| Integrante       | Arthur de Aquino | Henrique Estrela  | Laysa Lima | Matheus Kaick  |
+|------------------|------------------|-------------------|------------|----------------|
+| Arthur de Aquino | 9                | 9                 | 10         | 9              |
+| Henrique Estrela | 9                | 9                 | 10         | 10             |
+| Laysa Lima       | 9                | 10                | 10         | 9              |
+| Matheus Kaick    | 10               | 10                | 9          | 9              |
+| **Nota**         | **37**           | **38**            | **39**     | **37**         |
